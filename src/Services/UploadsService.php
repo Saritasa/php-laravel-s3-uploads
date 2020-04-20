@@ -3,6 +3,8 @@
 namespace Saritasa\LaravelUploads\Services;
 
 use Aws\S3\S3Client;
+use GuzzleHttp\Psr7\Uri;
+use Illuminate\Support\Str;
 use Saritasa\LaravelUploads\Dto\UploadFileToS3Data;
 use Carbon\Carbon;
 use Exception;
@@ -23,6 +25,13 @@ class UploadsService
     private $s3bucket;
 
     /**
+     * Temporary uploads path
+     *
+     * @var string
+     */
+    private $tmpPath;
+
+    /**
      * S3 Client
      *
      * @var S3Client
@@ -36,6 +45,7 @@ class UploadsService
      */
     public function __construct(AwsS3Adapter $adapter)
     {
+        $this->tmpPath = trim(config('media.uploads.temp_path', 'tmp'), '/').'/';
         $this->s3bucket = $adapter->getBucket();
         $this->s3Client = $adapter->getClient();
     }
@@ -60,14 +70,15 @@ class UploadsService
      *
      * @return UploadFileToS3Data
      */
-    public function getUploadFileToS3Data(string $filePath): UploadFileToS3Data
+    protected function getUploadFileToS3Data(string $filePath): UploadFileToS3Data
     {
-        $expires = config('media.uploads.expires', '+60 minutes');
+        $uploadExpres = config('media.uploads.expires', '+60 minutes');
+        $readExpires = config('media.expires', '+24 hours');
 
         return new UploadFileToS3Data([
-            UploadFileToS3Data::UPLOAD_URL => $this->getPresignedURL($filePath, $expires),
-            UploadFileToS3Data::VALID_UNTIL => Carbon::parse($expires)->format(Carbon::ISO8601),
-            UploadFileToS3Data::FILE_URL => $this->s3Client->getObjectUrl($this->s3bucket, $filePath),
+            UploadFileToS3Data::UPLOAD_URL => $this->signedUrl('Put', $filePath, $uploadExpres),
+            UploadFileToS3Data::VALID_UNTIL => Carbon::parse($uploadExpres)->format(Carbon::ISO8601),
+            UploadFileToS3Data::FILE_URL => $this->signedUrl('Put', $filePath, $readExpires),
         ]);
     }
 
@@ -85,25 +96,57 @@ class UploadsService
         } catch (Exception $e) {
             $newFileName = File::basename($name);
         }
-        return config('media.uploads.temp_path', 'tmp/') . $newFileName;
+        return $this->tmpPath . $newFileName;
     }
 
     /**
      * Get pre-signed url for upload file.
      *
+     * @param string $method Get, Put or Post
      * @param string $filePath path to upload file
      * @param string $expire expired from config for upload url
      *
      * @return string
      */
-    public function getPresignedURL(string $filePath, string $expire): string
+    protected function signedUrl(string $method, string $filePath, string $expire): string
     {
-        $command = $this->s3Client->getCommand('PutObject', [
+        $command = $this->s3Client->getCommand(Str::studly($method).'Object', [
             'Bucket' => $this->s3bucket,
             'Key' => $filePath,
-            'ACL' => config('media.uploads.acl', 'private'),
         ]);
 
         return (string)$this->s3Client->createPresignedRequest($command, $expire)->getUri();
+    }
+
+    /**
+     * Remove storage prefix from given path.
+     *
+     * @param string|null $fileUrl Url to remove prefix from
+     *
+     * @return string
+     */
+    public function getPathFromUrl(?string $fileUrl): string
+    {
+        if (!$fileUrl) {
+            return null;
+        }
+        $pathPrefix = trim($this->s3Client->getObjectUrl($this->s3bucket, '/'), '/').'/';
+        $path = Str::replaceFirst($pathPrefix, '', $fileUrl);
+        return (new Uri($path))->getPath();
+    }
+
+    /**
+     * Determine, if file is in temporary files folder
+     *
+     * @param string|null $filePath File path within S3 bucket
+     *
+     * @return boolean
+     */
+    public function isTmpFile(?string $filePath): bool
+    {
+        if (!$filePath) {
+            return false;
+        }
+        return Str::is($this->tmpPath."*", $filePath);
     }
 }
