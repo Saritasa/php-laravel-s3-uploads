@@ -1,0 +1,13 @@
+post:
+  description: After you get signed URL, you must upload the file itself to S3, using that URL. You can reference that file, using second URL given in response.
+  summary: Obtain permission to upload file to AWS S3
+  operationId: PresignUploadUrl
+  tags:
+  - Uploads
+  requestBody:
+    $ref: './requests/request.yaml'
+  responses:
+    200:
+      $ref: './responses/response.yaml'
+  security:
+    - AuthToken: []

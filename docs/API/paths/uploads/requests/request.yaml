@@ -1,0 +1,13 @@
+description: Uploads Request
+required: true
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+      - fileName
+      properties:
+        fileName:
+          type: string
+          description: Name of file, that user wants to upload
+          example: 'image.jpg'

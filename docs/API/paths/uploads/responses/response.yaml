@@ -1,0 +1,20 @@
+description: Obtain permission to upload file
+content:
+  application/json:
+    schema:
+      description: Permission to upload file to S3
+      type: object
+      properties:
+        uploadUrl:
+          description: S3 signed URL, which can be used to upload file - contains cryptographic token, which is valid during limited period of time
+          example: https://my-project-uploads.s3-us-west.amazonaws.com/tmp/1341234uoi123lhkj1.jpg?KEY=LKJLKJ13423FSLK2HJ134D214K4LF41H34134
+          type: string
+        validUntil:
+          description: Time, until which upload URL can be used
+          type: string
+          format: date-time
+          example: '2017-04-12T23:20:50.52Z'
+        fileUrl:
+          description: URL, which can be used to access/identify file after successful upload (including host and path)
+          example: https://my-project-uploads.s3-us-west.amazonaws.com/tmp/1341234uoi123lhkj1.jpg
+          type: string

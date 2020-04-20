@@ -12,7 +12,13 @@
         }
     ],
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.0",
+        "illuminate/database": "^5.4 || ^6.0",
+        "illuminate/http": "^5.4 || ^6.0",
+        "illuminate/support": "^5.4 || ^6.0",
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "saritasa/dingo-api-custom": "^2.2",
+        "saritasa/php-common": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",
@@ -33,6 +39,11 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Saritasa\\LaravelUploads\\UploadsApiServiceProvider"
+            ]
         }
     },
     "scripts": {
