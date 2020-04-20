@@ -62,11 +62,11 @@ class UploadsService
      */
     public function getUploadFileToS3Data(string $filePath): UploadFileToS3Data
     {
-        $expires = config('filesystems.disks.s3.expires');
+        $expires = config('media.uploads.expires', '+60 minutes');
 
         return new UploadFileToS3Data([
             UploadFileToS3Data::UPLOAD_URL => $this->getPresignedURL($filePath, $expires),
-            UploadFileToS3Data::VALID_UNTIL => Carbon::now()->addMinutes((int)$expires)->format(Carbon::ISO8601),
+            UploadFileToS3Data::VALID_UNTIL => Carbon::parse($expires)->format(Carbon::ISO8601),
             UploadFileToS3Data::FILE_URL => $this->s3Client->getObjectUrl($this->s3bucket, $filePath),
         ]);
     }
@@ -85,7 +85,7 @@ class UploadsService
         } catch (Exception $e) {
             $newFileName = File::basename($name);
         }
-        return config('media.temp_path') . $newFileName;
+        return config('media.uploads.temp_path', 'tmp/') . $newFileName;
     }
 
     /**
@@ -101,6 +101,7 @@ class UploadsService
         $command = $this->s3Client->getCommand('PutObject', [
             'Bucket' => $this->s3bucket,
             'Key' => $filePath,
+            'ACL' => config('media.uploads.acl', 'private'),
         ]);
 
         return (string)$this->s3Client->createPresignedRequest($command, $expire)->getUri();

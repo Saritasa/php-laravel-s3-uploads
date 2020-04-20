@@ -52,7 +52,7 @@ class UploadsApiServiceProvider extends ServiceProvider
             'middleware' => ['api', 'api.auth'],
             'namespace' => 'Saritasa\LaravelUploads\Http\Controllers'
         ], function (Router $apiRouter) {
-            $apiRouter->get('uploads/tmp', [
+            $apiRouter->post('uploads/tmp', [
                 'uses'  => 'UploadsApiController@getTmpUploadUrl',
                 'as'    => 'uploads.tmp'
             ]);
