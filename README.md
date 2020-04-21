@@ -16,6 +16,30 @@ Install the ```saritasa/laravel-s3-uploads``` package:
 $ composer require saritasa/laravel-s3-uploads
 ```
 
+Configure Your `Storage::cloud()` disk for AWS S3 accroding to [Laravel Manual](https://laravel.com/docs/filesystem#driver-prerequisites)
+
+This package exposes `POST <API_PREFIX>/uploads/tmp` route, using [Dingo/Api](https://github.com/dingo/api) router.
+It accepts `application/json` request in form:
+```json
+{
+  "fileName": "image.jpg"
+}
+```
+and returns response with [S3 PreSigned URLs](https://laravel.com/docs/6.x/filesystem#file-urls) as 
+```json
+{
+  "uploadUrl": "https://my-bucket.s3-us-west.amazonaws.com/tmp/1341234uoi123lhkj1.jpg?<WRITE_SIGNATURE=...>",
+  "validUntil": "2017-04-12T23:20:50.52Z",
+  "fileUrl": "https://my-bucket.s3-us-west.amazonaws.com/tmp/1341234uoi123lhkj1.jpg?<READ_SIGNATURE=...>"
+}
+```
+* **uploadUrl** can be used with `PUT <uploadUrl>` on frontend to upload URL to S3 directly.  
+* **fileUrl** is a presigned URL, that can be used to read this file on frontend after upload
+ (supposing, that your S3 bucket has default policy to set 'private' ACL for new files).
+ 
+
+### Configuration
+You can use `config/media.php` to change default uploads path within bucket or presigned urls expiration timeouts.
 
 ## Contributing
 See [CONTRIBUTING](CONTRIBUTING.md) and [Code of Conduct](CONDUCT.md),
