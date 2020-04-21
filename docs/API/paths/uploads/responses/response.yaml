@@ -6,8 +6,8 @@ content:
       type: object
       properties:
         uploadUrl:
-          description: S3 signed URL, which can be used to upload file - contains cryptographic token, which is valid during limited period of time
-          example: https://my-project-uploads.s3-us-west.amazonaws.com/tmp/1341234uoi123lhkj1.jpg?KEY=LKJLKJ13423FSLK2HJ134D214K4LF41H34134
+          description: S3 signed URL, which can be used to upload file - contains cryptographic token, which is valid during limited period of time. Use PUT <this URL> to upload file.
+          example: https://my-project-uploads.s3-us-west.amazonaws.com/tmp/8283218b-c0b3-4ecc-a6ad-66303e4be789.jpg?<WRITE_SIGNATURE=...>
           type: string
         validUntil:
           description: Time, until which upload URL can be used
@@ -16,5 +16,5 @@ content:
           example: '2017-04-12T23:20:50.52Z'
         fileUrl:
           description: URL, which can be used to access/identify file after successful upload (including host and path)
-          example: https://my-project-uploads.s3-us-west.amazonaws.com/tmp/1341234uoi123lhkj1.jpg
+          example: https://my-project-uploads.s3-us-west.amazonaws.com/tmp/8283218b-c0b3-4ecc-a6ad-66303e4be789.jpg?<READ_SIGNATURE=...>
           type: string

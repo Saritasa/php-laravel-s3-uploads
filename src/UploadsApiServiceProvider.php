@@ -49,7 +49,7 @@ class UploadsApiServiceProvider extends ServiceProvider
     {
         /* @var Router $router */
         $apiRouter->version(config('api.version'), [
-            'middleware' => ['api', 'api.auth'],
+            'middleware' => 'api',
             'namespace' => 'Saritasa\LaravelUploads\Http\Controllers'
         ], function (Router $apiRouter) {
             $apiRouter->post('uploads/tmp', [

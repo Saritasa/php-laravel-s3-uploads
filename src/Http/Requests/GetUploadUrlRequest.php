@@ -18,11 +18,9 @@ class GetUploadUrlRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return $rules = [
             'fileName' => 'required|string',
         ];
-
-        return $rules;
     }
 
     /**

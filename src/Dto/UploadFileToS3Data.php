@@ -14,7 +14,7 @@ class UploadFileToS3Data extends Dto
     public const FILE_URL = 'fileUrl';
 
     /**
-     * Presigned file upload url.
+     * Presigned file upload url (allows PUT operation)
      *
      * @var string
      */
@@ -28,7 +28,7 @@ class UploadFileToS3Data extends Dto
     public $validUntil;
 
     /**
-     * File url on S3.
+     * Presigned read URL
      *
      * @var string
      */

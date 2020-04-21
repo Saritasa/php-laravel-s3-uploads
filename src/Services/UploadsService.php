@@ -13,7 +13,9 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Ramsey\Uuid\Uuid;
 
 /**
- * Uploads service. Allows to perform read, store, delete files and retrieve url to file.
+ * Uploads service. Generates pre-signed URLs for temporary uploads.
+ * Helps to recognize, if some S3 URL belongs to temporary uploads folder.
+ * Converts full S3 URLs (including pre-signed) to relative paths without signature
  */
 class UploadsService
 {
@@ -72,13 +74,13 @@ class UploadsService
      */
     protected function getUploadFileToS3Data(string $filePath): UploadFileToS3Data
     {
-        $uploadExpres = config('media.uploads.expires', '+60 minutes');
+        $uploadExpires = config('media.uploads.expires', '+60 minutes');
         $readExpires = config('media.expires', '+24 hours');
 
         return new UploadFileToS3Data([
-            UploadFileToS3Data::UPLOAD_URL => $this->signedUrl('Put', $filePath, $uploadExpres),
-            UploadFileToS3Data::VALID_UNTIL => Carbon::parse($uploadExpres)->format(Carbon::ISO8601),
-            UploadFileToS3Data::FILE_URL => $this->signedUrl('Put', $filePath, $readExpires),
+            UploadFileToS3Data::UPLOAD_URL => $this->signedUrl('Put', $filePath, $uploadExpires),
+            UploadFileToS3Data::VALID_UNTIL => Carbon::parse($uploadExpires)->format(Carbon::ISO8601),
+            UploadFileToS3Data::FILE_URL => $this->signedUrl('Get', $filePath, $readExpires),
         ]);
     }
 
@@ -119,7 +121,8 @@ class UploadsService
     }
 
     /**
-     * Remove storage prefix from given path.
+     * Converts full S3 URLs (including pre-signed) to relative paths without signature:
+     * Remove storage prefix  (S3 server + bucket) from given URL and all query parameters.
      *
      * @param string|null $fileUrl Url to remove prefix from
      *
@@ -136,7 +139,7 @@ class UploadsService
     }
 
     /**
-     * Determine, if file is in temporary files folder
+     * Helps to recognize, if some path (not URL!) belongs to temporary uploads folder.
      *
      * @param string|null $filePath File path within S3 bucket
      *
