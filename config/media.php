@@ -9,7 +9,7 @@ return [
         'expires' => '+60 minutes',
 
         // Default permissions for uploaded file
-        'acl' => 'public-read',
+        'acl' => 'private',
     ],
 
     // How long read pre-signed URL is valid
