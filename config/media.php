@@ -11,4 +11,10 @@ return [
         // Default permissions for uploaded file
         'acl' => 'public-read',
     ],
+
+    // How long read pre-signed URL is valid
+    'expires' => '+24 hours',
+
+    // User avatars
+    'avatars' => 'avatars/',
 ];

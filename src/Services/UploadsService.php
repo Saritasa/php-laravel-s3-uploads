@@ -115,6 +115,7 @@ class UploadsService
         $command = $this->s3Client->getCommand(Str::studly($method).'Object', [
             'Bucket' => $this->s3bucket,
             'Key' => $filePath,
+            'ACL' => config('media.uploads.acl', 'private'),
         ]);
 
         return (string)$this->s3Client->createPresignedRequest($command, $expire)->getUri();
@@ -126,9 +127,9 @@ class UploadsService
      *
      * @param string|null $fileUrl Url to remove prefix from
      *
-     * @return string
+     * @return string|null
      */
-    public function getPathFromUrl(?string $fileUrl): string
+    public function getPathFromUrl(?string $fileUrl): ?string
     {
         if (!$fileUrl) {
             return null;
