@@ -115,7 +115,7 @@ class UploadsService
         $command = $this->s3Client->getCommand(Str::studly($method).'Object', [
             'Bucket' => $this->s3bucket,
             'Key' => $filePath,
-            'ACL' => config('media.uploads.acl', 'private'),
+//            'ACL' => config('media.uploads.acl', 'private'),
         ]);
 
         return (string)$this->s3Client->createPresignedRequest($command, $expire)->getUri();
