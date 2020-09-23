@@ -1,5 +1,9 @@
 # Changes History
 
+1.1.3
+-----
+Do not fail on avatar update
+
 1.1.2
 -----
 Fix publishable config name
