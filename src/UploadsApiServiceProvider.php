@@ -73,7 +73,7 @@ class UploadsApiServiceProvider extends ServiceProvider
     private function declarePublishedConfig()
     {
         $this->publishes([
-            __DIR__.'/../config/uploads.php' => config_path('uploads.php')
+            __DIR__.'/../config/media.php' => config_path('media.php')
         ], 'config');
     }
 
