@@ -37,12 +37,16 @@ class AvatarObserver
      */
     private function moveAvatarIfNeed($user): void
     {
-        if ($this->uploadsService->isTmpFile($user->avatar)) {
-            $permanentAvatarPath = config('media.avatars').$user->id.'.'.File::extension($user->avatar);
-            if (Storage::cloud()->move($user->avatar, $permanentAvatarPath)) {
-                $user->avatar = $permanentAvatarPath;
-                $user->save();
-            }
+        if (!$this->uploadsService->isTmpFile($user->avatar)) {
+            return;
+        }
+        $permanentAvatarPath = config('media.avatars').$user->id.'.'.File::extension($user->avatar);
+        if (Storage::cloud()->exists($permanentAvatarPath)) {
+            Storage::cloud()->delete($permanentAvatarPath);
+        }
+        if (Storage::cloud()->move($user->avatar, $permanentAvatarPath)) {
+            $user->avatar = $permanentAvatarPath;
+            $user->save();
         }
     }
 
