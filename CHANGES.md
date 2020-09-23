@@ -1,5 +1,9 @@
 # Changes History
 
+1.1.2
+-----
+Fix publishable config name
+
 1.1.1
 -----
 Disable set ACL explicitly - causes invalid signature
