@@ -1,5 +1,9 @@
 # Changes History
 
+1.1.4
+-----
+Fix isTmpFile() detection
+
 1.1.3
 -----
 Do not fail on avatar update
