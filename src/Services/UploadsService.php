@@ -136,7 +136,7 @@ class UploadsService
         }
         $pathPrefix = trim($this->s3Client->getObjectUrl($this->s3bucket, '/'), '/').'/';
         $path = Str::replaceFirst($pathPrefix, '', $fileUrl);
-        return (new Uri($path))->getPath();
+        return ltrim((new Uri($path))->getPath(), '/\\');
     }
 
     /**
@@ -151,6 +151,6 @@ class UploadsService
         if (!$filePath) {
             return false;
         }
-        return Str::is($this->tmpPath."*", $filePath);
+        return Str::is($this->tmpPath."*", ltrim($filePath, '/\\'));
     }
 }
