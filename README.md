@@ -1,6 +1,7 @@
 # laravel-s3-uploads
 
-[![Build Status](https://travis-ci.org/Saritasa/php-laravel-s3-uploads.svg?branch=master)](https://travis-ci.org/Saritasa/php-laravel-s3-uploads)
+[![PHP Unit](https://github.com/Saritasa/php-laravel-s3-uploads/workflows/PHP%20Unit/badge.svg)](https://github.com/Saritasa/php-laravel-s3-uploads/actions)
+[![PHP CodeSniffer](https://github.com/Saritasa/php-laravel-s3-uploads/workflows/PHP%20Codesniffer/badge.svg)](https://github.com/Saritasa/php-laravel-s3-uploads/actions)
 [![CodeCov](https://codecov.io/gh/Saritasa/php-laravel-s3-uploads/branch/master/graph/badge.svg)](https://codecov.io/gh/Saritasa/php-laravel-s3-uploads)
 [![Release](https://img.shields.io/github/release/Saritasa/php-laravel-s3-uploads.svg)](https://github.com/Saritasa/php-laravel-s3-uploads/releases)
 [![PHPv](https://img.shields.io/packagist/php-v/saritasa/laravel-s3-uploads.svg)](http://www.php.net)

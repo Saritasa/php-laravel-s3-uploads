@@ -47,7 +47,7 @@ trait HasUploadedFile
      *
      * @return string
      */
-    private function getAwsTemporaryUrl($adapter, $path, $expiration, $options)
+    private function getAwsTemporaryUrl(AwsS3Adapter $adapter, $path, $expiration, array $options)
     {
         $client = $adapter->getClient();
 

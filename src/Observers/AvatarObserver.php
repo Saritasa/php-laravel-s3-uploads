@@ -22,7 +22,7 @@ class AvatarObserver extends TmpFileObserver
      *
      * @return string
      */
-    protected function getPermanentPath($user, string $fileName): string
+    protected function getPermanentPath(Model $user, string $fileName): string
     {
         return $permanentAvatarPath = config('media.avatars').$user->id.'.'.File::extension($user->avatar);
     }

@@ -63,7 +63,7 @@ abstract class TmpFileObserver
      *
      * @return string
      */
-    abstract protected function getPermanentPath($model, string $fileName): string;
+    abstract protected function getPermanentPath(Model $model, string $fileName): string;
 
     /**
      * If field set as null, then delete original file from S3.
@@ -72,7 +72,7 @@ abstract class TmpFileObserver
      *
      * @throws Exception
      */
-    private function deleteIfNeed($model): void
+    private function deleteIfNeed(Model $model): void
     {
         if (!$model->{$this->field} && $model->isDirty($this->field)) {
             $path = $model->getOriginal($this->field);
@@ -99,7 +99,7 @@ abstract class TmpFileObserver
      *
      * @throws Exception
      */
-    private function moveIfNeed($model): bool
+    private function moveIfNeed(Model $model): bool
     {
         $currentPath = $model->{$this->field};
         if (!$this->uploadsService->isTmpFile($currentPath)) {
